@@ -5,7 +5,8 @@ let canvas = document.querySelector('canvas')
 
 function StartVideo (){
   navigator.mediaDevices.getUserMedia({
-    video:{},
+    video:{facingMode:"user"},
+    
   },
   stream => Video.srcObject = stream,
   err => console.log("error",err)
