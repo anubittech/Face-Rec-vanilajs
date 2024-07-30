@@ -6,6 +6,7 @@ let canvas = document.querySelector('canvas')
 function StartVideo (){
  navigator.mediaDevices.getUserMedia({
   video:{
+    width:1980,
     facingMode:"user"
   }
  }
