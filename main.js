@@ -7,6 +7,7 @@ function StartVideo (){
  navigator.mediaDevices.getUserMedia({
   video:{
     width:1980,
+    height:1080,
     facingMode:"user"
   }
  }
