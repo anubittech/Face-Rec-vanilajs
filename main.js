@@ -4,13 +4,20 @@ let Video = document.querySelector('#video')
 let canvas = document.querySelector('canvas')
 
 function StartVideo (){
-  navigator.mediaDevices.getUserMedia({
-    video:{facingMode:"user"},
-    
-  },
-  stream => Video.srcObject = stream,
-  err => console.log("error",err)
-)
+ navigator.mediaDevices.getUserMedia({
+  video:{
+    facingMode:"user"
+  }
+ }
+ 
+).then((stream)=>{
+  Video.srcObject = stream;
+  Video.play()
+})
+.catch((err)=>{
+  console.log(`Error:${err}`)
+})
+ 
 }
 
 StartVideo()
