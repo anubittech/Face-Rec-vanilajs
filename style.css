@@ -28,16 +28,7 @@ main{
   justify-content:center;
   
 }
-.videoCont{
-  width: 100%;
-  height:fit-content;
-  display: flex;
- align-items: center;
- justify-content: center;
- padding-left: 18.5rem;
-  /* border: var(--b-black); */
-  
-}
+
 #video{
   /* width: 100%; */
   border: var(--b-black);
