@@ -15,7 +15,7 @@ function startVideo(){
     .then(strm => Video.srcObject = strm)
     .catch(err => console.log("Error:",err));
 }
-// startVideo()
+startVideo()
 Video.addEventListener('play',()=>{
       let canvas = faceAI.createCanvasFromMedia(Video);
       document.body.append(canvas)
@@ -41,7 +41,7 @@ Video.addEventListener('play',()=>{
 let labeledFaceDescriptors;
 
 async function LoadLabelImages(){
-  const labels = ['Rahul','Titas'];
+  const labels = ['Titas'];
   return Promise.all(
     labels.map(async label =>{
       const descriptions = [];
