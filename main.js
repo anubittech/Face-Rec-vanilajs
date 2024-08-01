@@ -15,7 +15,7 @@ function startVideo(){
     .then(strm => Video.srcObject = strm)
     .catch(err => console.log("Error:",err));
 }
-startVideo()
+// startVideo()
 Video.addEventListener('play',()=>{
       let canvas = faceAI.createCanvasFromMedia(Video);
       document.body.append(canvas)
@@ -46,7 +46,7 @@ async function LoadLabelImages(){
     labels.map(async label =>{
       const descriptions = [];
       for (let i = 1 ;i <= 2;i++){
-        const img = await faceAI.fetchImage(`/Img/${label}/${i}.jpg`);
+        const img = await faceAI.fetchImage(`./Img/${label}/${i}.jpg`);
         const detection = await faceAI.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
         descriptions.push(detection.descriptor);
       }
