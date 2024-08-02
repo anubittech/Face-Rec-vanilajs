@@ -56,7 +56,9 @@ async function LoadLabelImages(){
         const img = await faceAI.fetchImage(`/Img/${label}/${i}.jpg`);
         console.log("image label func")
         const detection = await faceAI.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+        console.log("image label func1")
         descriptions.push(detection.descriptor);
+        console.log("image label func2")
       }
       console.log("Error loading images for {label}");
       return new faceAI.LabeledFaceDescriptors(label,descriptions)
