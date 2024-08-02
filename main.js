@@ -64,7 +64,7 @@ async function LoadLabelImages(){
   )
 }
 console.log("line 63 run");
-document.addEventListener('DOMContentLoaded', async ()=>{
+window.addEventListener('load', async ()=>{
   labeledFaceDescriptors = await LoadLabelImages();
   console.log("loaded run");
 })
