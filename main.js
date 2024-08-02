@@ -9,14 +9,14 @@ Promise.all([
   faceAI.nets.tinyFaceDetector.loadFromUri('/models'),
   faceAI.nets.faceLandmark68Net.loadFromUri('/models'),
   faceAI.nets.faceRecognitionNet.loadFromUri('/models')
-]).then(startVideo)
-  .catch(err => console.error("Error Loading models:",err));
+]).then(startVideo);
+  // .catch(err => console.error("Error Loading models:",err));
 
 function startVideo(){
   navigator.mediaDevices.getUserMedia({video:{}})
     .then(strm => Video.srcObject = strm)
-    console.log("video start")
     .catch(err => console.log("Error accessing camera:",err));
+    console.log("video start")
 }
 // startVideo()
 Video.addEventListener('play',()=>{
@@ -26,6 +26,7 @@ Video.addEventListener('play',()=>{
       let displaySize = {width:Video.width,height:Video.height};
       faceAI.matchDimensions(canvas,displaySize);
       setInterval(async ()=>{
+        console.log("Detection start");
         const detections = await faceAI.detectAllFaces(Video,new faceAI.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
         console.log("Detection:",detections);
         const resizedetecttions = faceAI.resizeResults(detections,displaySize);
