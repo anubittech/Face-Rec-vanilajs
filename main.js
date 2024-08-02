@@ -48,7 +48,7 @@ Video.addEventListener('play',()=>{
 let labeledFaceDescriptors;
 console.log("line 47 run");
 async function LoadLabelImages(){
-  const labels = ['Titas'];
+  const labels = ['Rahul','Titas'];
   return Promise.all(
     labels.map(async label =>{
       const descriptions = [];
