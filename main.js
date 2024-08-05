@@ -1,38 +1,51 @@
-import * as faceai from 'face-api.js'
-const video = document.getElementById('video');
+import * as faceai from "face-api.js";
+const video = document.getElementById("video");
 
 // Start video stream
+console.log("step 1");
+
 Promise.all([
-    faceai.nets.tinyFaceDetector.loadFromUri('/models'),
-    faceai.nets.faceLandmark68Net.loadFromUri('/models'),
-    faceai.nets.faceRecognitionNet.loadFromUri('/models'),
-    faceai.nets.faceExpressionNet.loadFromUri('/models'),
-]).then(Videoplay)
+  faceai.nets.tinyFaceDetector.loadFromUri("/models"),
+  faceai.nets.faceLandmark68Net.loadFromUri("/models"),
+  faceai.nets.faceRecognitionNet.loadFromUri("/models"),
+  faceai.nets.faceExpressionNet.loadFromUri("/models"),
+])
+  .then(Videoplay)
+  .catch((err) => console.log("error:", err));
+console.log("step 2");
 
-function Videoplay(){
-    navigator.mediaDevices.getUserMedia({
-        video:{}
-    },
-    
-).then((strm)=>video.srcObject = strm)
-.catch((err)=>console.log("Error:",err))
+function Videoplay() {
+  console.log("video run");
+  navigator.mediaDevices
+    .getUserMedia({
+      video: {},
+    })
+    .then((strm) => (video.srcObject = strm))
+    .catch((err) => console.log("Error:", err));
 }
+console.log("step 3");
 
-video.addEventListener('playing',()=>{
-    const canvas = faceai.createCanvasFromMedia(video)
-    document.body.append(canvas)
-    const displaysize = {width:video.width,height:video.height}
-    faceai.matchDimensions(canvas,displaysize)
-    setInterval( async ()=>{
-        const detections = await faceai.detectAllFaces(video, new faceai.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
-        const resizeDetect = faceai.resizeResults(detections,displaysize)
-        canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height)
-        faceai.draw.drawDetections(canvas, resizeDetect)
-    faceai.draw.drawFaceLandmarks(canvas, resizeDetect)
-    faceai.draw.drawFaceExpressions(canvas, resizeDetect)
+video.addEventListener("playing", () => {
+  console.log("video event run");
 
-    },100)
-})
+  const canvas = faceai.createCanvasFromMedia(video);
+  document.body.append(canvas);
+  const displaysize = { width: video.width, height: video.height };
+  faceai.matchDimensions(canvas, displaysize);
+  setInterval(async () => {
+    console.log("video time interval run");
+
+    const detections = await faceai
+      .detectAllFaces(video, new faceai.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceExpressions();
+    const resizeDetect = faceai.resizeResults(detections, displaysize);
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    faceai.draw.drawDetections(canvas, resizeDetect);
+    faceai.draw.drawFaceLandmarks(canvas, resizeDetect);
+    faceai.draw.drawFaceExpressions(canvas, resizeDetect);
+  }, 100);
+});
 
 // Capture and send video frame to backend every second
 // setInterval(() => {
@@ -66,4 +79,3 @@ video.addEventListener('playing',()=>{
 //     })
 //     .catch(err => console.error('Error:', err));
 // }
-
