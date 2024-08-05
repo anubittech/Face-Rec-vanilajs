@@ -18,7 +18,7 @@ function Videoplay(){
 )
 }
 
-video.addEventListener('play',()=>{
+video.addEventListener('playing',()=>{
     const canvas = faceai.createCanvasFromMedia(video)
     document.body.append(canvas)
     const displaysize = {width:video.width,height:video.height}
