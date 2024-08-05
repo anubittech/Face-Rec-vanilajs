@@ -13,9 +13,9 @@ function Videoplay(){
     navigator.mediaDevices.getUserMedia({
         video:{}
     },
-    strm => video.srcObject = strm,
-    err => console.error(err)
-)
+    
+).then((strm)=>video.srcObject = strm)
+.catch((err)=>console.log("Error:",err))
 }
 
 video.addEventListener('playing',()=>{
