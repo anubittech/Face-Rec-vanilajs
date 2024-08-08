@@ -15,7 +15,7 @@ document.addEventListener("load", () => {
     });
     video.srcObject = stream;
     let faceDetect = await faceapi
-      .detectAllFaces(img)
+      .detectAllFaces(video)
       .withFaceLandmarks()
       .withFaceDescriptors()
       .withFaceExpressions();
