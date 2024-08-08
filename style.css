@@ -26,6 +26,7 @@ main{
   display: flex;
   align-items: start  ;
   justify-content:center;
+  position: relative;
   
 }
 
@@ -40,8 +41,10 @@ main{
   border: var(--b-black);
 }
 canvas{
-  position: absolute;
+  /* position: absolute; */
   z-index: 10;
+  top: 0;
+  left: 0;
   /* margin-top: 10vh; */
   border: 1px solid red;
 }
