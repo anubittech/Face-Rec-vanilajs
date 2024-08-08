@@ -18,11 +18,11 @@ async function VideoRun() {
         .withFaceExpressions();
       canvas.innerHTML = faceapi.createCanvasFromMedia(video);
       faceapi.matchDimensions(canvas, { width: 400, height: 500 });
-      faceDesc = faceapi.resizeResults(detection, video);
-      faceapi.draw.drawDetections(canvasRef.current, faceDesc);
+      faceDesc = faceapi.resizeResults(detection, { width: 400, height: 500 });
+      faceapi.draw.drawDetections(canvas, faceDesc);
 
-      // faceapi.draw.drawFaceLandmarks(canvasRef.current, faceDesc);
-      faceapi.draw.drawFaceExpressions(canvasRef.current, faceDesc);
+      // faceapi.draw.drawFaceLandmarks(canvas, faceDesc);
+      faceapi.draw.drawFaceExpressions(canvas, faceDesc);
     }, 100);
   }
 
