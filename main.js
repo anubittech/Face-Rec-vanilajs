@@ -10,10 +10,13 @@ document.addEventListener("load", () => {
       await faceapi.loadFaceLandmarkModel(MODEL_URL),
       await faceapi.loadFaceRecognitionModel(MODEL_URL),
       await faceapi.loadFaceExpressionModel(MODEL_URL);
-    const stream = navigator.mediaDevices.getUserMedia({
-      video: {},
-    });
-    video.srcObject = stream;
+    navigator.mediaDevices
+      .getUserMedia({
+        video: {},
+      })
+      .then((strm) => (video.srcObject = strm))
+      .catch((err) => console.log(err));
+
     let faceDetect = await faceapi
       .detectAllFaces(video)
       .withFaceLandmarks()
