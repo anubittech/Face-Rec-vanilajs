@@ -39,3 +39,9 @@ main{
 .details{
   border: var(--b-black);
 }
+canvas{
+  position: absolute;
+  z-index: 10;
+  /* margin-top: 10vh; */
+  border: 1px solid red;
+}
