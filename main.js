@@ -51,24 +51,24 @@ async function FaceDetect() {
   }, 100);
 }
 
-function LoadLabelImage() {
+async function LoadLabelImage() {
   const ImageLabels = ["Anupam", "Titas"];
   return Promise.all(
-    ImageLabels.map(async (labels) => {
-      let description = [];
+    ImageLabels.map(async (label) => {
+      let descriptions = [];
       for (let i = 1; i <= 2; i++) {
-        let img = await faceapi.fetchImage(`/Img/${labels}/${i}.jpg`);
+        let img = await faceapi.fetchImage(`/Img/${label}/${i}.jpg`);
         const detecttions = await faceapi
           .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions())
           .withFaceLandmarks()
           .withFaceDescriptors();
         if (detecttions) {
-          description.push(detecttions.descriptor);
+          descriptions.push(detecttions.descriptor);
         } else {
           console.warn(`No face detcted image:`);
         }
       }
-      return new faceapi.LabeledFaceDescriptors(labels, description);
+      return new faceapi.LabeledFaceDescriptors(label, descriptions);
     })
   );
 }
