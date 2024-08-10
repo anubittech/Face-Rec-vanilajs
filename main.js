@@ -18,12 +18,12 @@ function startvideo() {
     })
     .then((strm) => (video.srcObject = strm))
     .catch((err) => console.log(err));
-// video.srcObject = '/speech.mp4'
+  // video.srcObject = '/speech.mp4'
 }
 
 async function FaceDetect() {
-    let refImage = await LoadLabelImage()
-    let facematcher = new faceapi.FaceMatcher(refImage,0.6)
+  let refImage = await LoadLabelImage();
+  let facematcher = new faceapi.FaceMatcher(refImage, 0.6);
   setInterval(async () => {
     let detecttion = await faceapi
       .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
@@ -37,36 +37,40 @@ async function FaceDetect() {
     let resizedDetect = faceapi.resizeResults(detecttion, {
       width: video.width,
       height: video.height,
-    })
-    let faceResult = resizedDetect.map((fd => facematcher.findBestMatch(fd.descriptor)))
-    faceResult.forEach((result,i)=>{
-        let box = resizedDetect[i].detection.box
-        let drawbox = new faceapi.draw.DrawBox(box,{label:result.toString()})
-        drawbox.draw(canvas)
-    })
+    });
+    let faceResult = resizedDetect.map((fd) =>
+      facematcher.findBestMatch(fd.descriptor)
+    );
+    faceResult.forEach((result, i) => {
+      let box = resizedDetect[i].detection.box;
+      let drawbox = new faceapi.draw.DrawBox(box, { label: result.toString() });
+      drawbox.draw(canvas);
+    });
     faceapi.draw.drawDetections(canvas, resizedDetect);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetect);
   }, 100);
 }
 
-function LoadLabelImage(){
-    const ImageLabels = ["Anupam","Titas"]
-    return Promise.all(
-        ImageLabels.map(async(labels)=>{
-            let description = []
-            for (let i = 1 ; i <= 2 ; i++){
-                let img = await faceapi.fetchImage(`/Img/${labels}/${i}.jpg`);
-                const detecttions = await faceapi.detectSingleFace(img,new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
-               if(detecttions){
-                description.push(detecttions.descriptor)
-               }else{
-                console.warn(`No face detcted image:`);
-                
-               }
-            }
-            return new faceapi.LabeledFaceDescriptors(labels,description)
-        })
-    )
+function LoadLabelImage() {
+  const ImageLabels = ["Anupam", "Titas"];
+  return Promise.all(
+    ImageLabels.map(async (labels) => {
+      let description = [];
+      for (let i = 1; i <= 2; i++) {
+        let img = await faceapi.fetchImage(`/Img/${labels}/${i}.jpg`);
+        const detecttions = await faceapi
+          .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks()
+          .withFaceDescriptors();
+        if (detecttions) {
+          description.push(detecttions.descriptor);
+        } else {
+          console.warn(`No face detcted image:`);
+        }
+      }
+      return new faceapi.LabeledFaceDescriptors(labels, description);
+    })
+  );
 }
 
 FaceDetect();
