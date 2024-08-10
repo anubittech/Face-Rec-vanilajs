@@ -18,6 +18,7 @@ function startvideo() {
     })
     .then((strm) => (video.srcObject = strm))
     .catch((err) => console.log(err));
+// video.srcObject = '/speech.mp4'
 }
 
 async function FaceDetect() {
@@ -41,7 +42,7 @@ async function FaceDetect() {
     faceResult.forEach((result,i)=>{
         let box = resizedDetect[i].detection.box
         let drawbox = new faceapi.draw.DrawBox(box,{label:result.toString()})
-        drawbox.draw(canvas.innerHTML)
+        drawbox.draw(canvas)
     })
     faceapi.draw.drawDetections(canvas, resizedDetect);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetect);
@@ -56,7 +57,12 @@ function LoadLabelImage(){
             for (let i = 1 ; i <= 2 ; i++){
                 let img = await faceapi.fetchImage(`/Img/${labels}/${i}.jpg`);
                 const detecttions = await faceapi.detectSingleFace(img,new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
+               if(detecttions){
                 description.push(detecttions.descriptor)
+               }else{
+                console.warn(`No face detcted image:`);
+                
+               }
             }
             return new faceapi.LabeledFaceDescriptors(labels,description)
         })
