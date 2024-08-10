@@ -9,7 +9,7 @@ Promise.all([
   faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
   faceapi.nets.faceExpressionNet.loadFromUri("/models"),
   console.log("load models"),
-]).then(startvideo)
+]).then(startvideo);
 
 function startvideo() {
   navigator.mediaDevices
@@ -21,19 +21,46 @@ function startvideo() {
 }
 
 async function FaceDetect() {
-    setInterval(async ()=>{
-        let detecttion = await faceapi.detectSingleFace(video,new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-        canvas.innerHTML = faceapi.createCanvasFromMedia(video)
-        faceapi.matchDimensions(canvas,{
-            width:video.width,
-            height:video.height
-        })
-        let resizedDetect = faceapi.resizeResults(detecttion,{
-            width:video.width,
-            height:video.height
-        })
-        faceapi.draw.drawDetections(canvas,resizedDetect)
-        faceapi.draw.drawFaceExpressions(canvas,resizedDetect)
-    },100)
+    let refImage = await LoadLabelImage()
+    let facematcher = new faceapi.FaceMatcher(refImage,0.6)
+  setInterval(async () => {
+    let detecttion = await faceapi
+      .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+    canvas.innerHTML = faceapi.createCanvasFromMedia(video);
+    faceapi.matchDimensions(canvas, {
+      width: video.width,
+      height: video.height,
+    });
+    let resizedDetect = faceapi.resizeResults(detecttion, {
+      width: video.width,
+      height: video.height,
+    })
+    let faceResult = resizedDetect.map((fd => facematcher.findBestMatch(fd.descriptor)))
+    faceResult.forEach((result,i)=>{
+        let box = resizedDetect[i].detection.box
+        let drawbox = new faceapi.draw.DrawBox(box,{label:result.toString()})
+        drawbox.draw(canvas)
+    })
+    faceapi.draw.drawDetections(canvas, resizedDetect);
+    faceapi.draw.drawFaceExpressions(canvas, resizedDetect);
+  }, 100);
 }
-FaceDetect()
+
+function LoadLabelImage(){
+    const ImageLabels = ["Titas"]
+    return Promise.all(
+        ImageLabels.map(async(labels)=>{
+            let description = []
+            for (let i = 1 ; i <= 2 ; i++){
+                let img = await faceapi.fetchImage(`/img/${labels}/${i}.jpg`);
+                const detecttions = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                description.push(detecttions.descriptor)
+            }
+            return new faceapi.LabeledFaceDescriptors(labels,description)
+        })
+    )
+}
+
+FaceDetect();
