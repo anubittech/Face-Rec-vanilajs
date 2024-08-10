@@ -41,7 +41,7 @@ async function FaceDetect() {
     faceResult.forEach((result,i)=>{
         let box = resizedDetect[i].detection.box
         let drawbox = new faceapi.draw.DrawBox(box,{label:result.toString()})
-        drawbox.draw(canvas)
+        drawbox.draw(canvas.innerHTML)
     })
     faceapi.draw.drawDetections(canvas, resizedDetect);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetect);
@@ -49,13 +49,13 @@ async function FaceDetect() {
 }
 
 function LoadLabelImage(){
-    const ImageLabels = ["Titas"]
+    const ImageLabels = ["Anupam","Titas"]
     return Promise.all(
         ImageLabels.map(async(labels)=>{
             let description = []
             for (let i = 1 ; i <= 2 ; i++){
                 let img = await faceapi.fetchImage(`/Img/${labels}/${i}.jpg`);
-                const detecttions = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                const detecttions = await faceapi.detectSingleFace(img,new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
                 description.push(detecttions.descriptor)
             }
             return new faceapi.LabeledFaceDescriptors(labels,description)
