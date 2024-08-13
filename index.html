@@ -19,9 +19,55 @@
         <video id="video" width="420" height="350" autoplay muted></video>
         <canvas id="canvas" style="position: absolute"></canvas>
 
-        <div class="details"></div>
+        <div class="details">
+          <button class="btn">Capture</button>
+          <p class="cords"></p>
+          <p class="address"></p>
+        </div>
       </div>
     </main>
     <script type="module" defer src="/main.js"></script>
+    <script type="module">
+      let address = document.querySelector(".details .address")
+      let coords = document.querySelector('.cords')
+      let Btn = document.querySelector(".btn")
+
+      let apiEndpoint = "https://api.opencagedata.com/geocode/v1/json"
+      let apiKey = "1432b016fc1e46efa62051867778f7c8"
+      // let apiKey = import.meta.env.VITE_GEOCODE_API_KEY
+      const getUserAddress = async (latitude,longitude)=>{
+          let query = `${latitude},${longitude}`;
+          let apiUrl = `${apiEndpoint}?key=${apiKey}&q=${query}&pretty=1`;
+          try {
+            let res = await fetch(apiUrl)
+            let data =await res.json()
+            // console.log(data);
+            address.textContent = `Full Adress: ${data.results[0].formatted}`;
+            // console.log(address);
+            
+          } catch (error) {
+            console.log(error);
+            
+          }
+      }
+
+      Btn.addEventListener("click",()=>{
+        // console.log("click");
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(
+            (position)=>{
+              const {latitude,longitude} = position.coords;
+              coords.textContent = `user latitude: ${latitude} & longitude: ${longitude}`
+              getUserAddress(latitude,longitude)
+            },
+            (err)=>{
+              address.textContent = err.message
+            }
+          )
+        }
+        
+      })
+    </script>
   </body>
+
 </html>
