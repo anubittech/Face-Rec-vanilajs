@@ -1,5 +1,6 @@
 let video = document.querySelector("#video");
 import * as faceapi from "face-api.js";
+
 Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
   faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
@@ -20,7 +21,7 @@ async function startRecognition() {
   const labeledFaceDescriptors = await loadLabeledImages();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-  video.addEventListener("play", () => {
+  video.addEventListener("playing", () => {
     const canvas = faceapi.createCanvasFromMedia(video);
     document.body.append(canvas);
     const displaySize = { width: video.width, height: video.height };
@@ -60,7 +61,7 @@ async function loadLabeledImages() {
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 2; i++) {
         const img = await faceapi.fetchImage(`/Img/${label}/${i}.jpg`);
         const detections = await faceapi
           .detectSingleFace(img)
